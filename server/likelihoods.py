@@ -98,7 +98,6 @@ def separate_sightings(sightings: list[Sighting]) -> tuple[list[Sighting], list[
     most_accurate_section = None
     for sighting in sorted(sightings, key=(lambda s: s.dt), reverse=True):
         if consistent:
-            new_sightings.append(sighting)
             seconds_until_location_0 = ((len(LOCATIONS) - sighting.location) % len(LOCATIONS)) * FIFTEEN_MINUTES
             section = Section(
                 sighting.dt.timestamp() + seconds_until_location_0 - FIFTEEN_MINUTES,
@@ -111,7 +110,9 @@ def separate_sightings(sightings: list[Sighting]) -> tuple[list[Sighting], list[
                     most_accurate_section = most_accurate_section.combine(section)
                 except InconsistentSections:
                     consistent = False
-                    old_sightings.append(new_sightings.pop())
+
+        if consistent:
+            new_sightings.append(sighting)
         else:
             old_sightings.append(sighting)
     return new_sightings, old_sightings

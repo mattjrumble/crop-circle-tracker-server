@@ -1,6 +1,6 @@
 import aiosqlite
 
-FILENAME = '../db.sqlite3'
+FILENAME = 'db.sqlite3'
 
 
 async def initialize():
@@ -21,12 +21,12 @@ async def insert_sighting(world, location, dt):
 
 async def select_sightings():
     async with aiosqlite.connect(FILENAME) as db:
-        return await db.execute_fetchall('SELECT row_id, world, location, dt FROM sightings')
+        return await db.execute_fetchall('SELECT row_id, world, location, dt FROM sightings ORDER BY world, dt')
 
 
 async def select_likelihoods():
     async with aiosqlite.connect(FILENAME) as db:
-        return await db.execute_fetchall('SELECT world, likelihood_json FROM likelihoods')
+        return await db.execute_fetchall('SELECT world, likelihood_json FROM likelihoods ORDER BY world')
 
 
 async def update_likelihoods(world, likelihoods_json):
