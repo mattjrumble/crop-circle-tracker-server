@@ -20,7 +20,7 @@ async def initialize():
 
 
 @app.on_event('startup')
-@repeat_every(seconds=1, wait_first=False, logger=logger)
+@repeat_every(seconds=10, wait_first=False, logger=logger)
 async def recalculate():
     await likelihoods.recalculate()
 

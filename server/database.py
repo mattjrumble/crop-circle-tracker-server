@@ -26,7 +26,7 @@ async def select_sightings():
 
 async def select_likelihoods():
     async with aiosqlite.connect(FILENAME) as db:
-        return await db.execute_fetchall('SELECT world, likelihood_json FROM likelihoods ORDER BY world')
+        return await db.execute_fetchall('SELECT world, likelihood_json FROM likelihoods')
 
 
 async def update_likelihoods(world, likelihoods_json):

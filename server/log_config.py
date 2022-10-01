@@ -24,7 +24,7 @@ LOG_CONFIG = {
         },
     },
     "loggers": {
-        "uvicorn": {"handlers": ["default"], "level": "DEBUG"},
+        "uvicorn": {"handlers": ["default"], "level": "INFO"},
         "uvicorn.error": {"level": "INFO"},
         "uvicorn.access": {"handlers": ["access"], "level": "INFO", "propagate": False},
     },
