@@ -2,6 +2,7 @@ from collections import defaultdict
 from datetime import datetime
 from json import dumps
 from logging import getLogger
+from time import time
 
 from server.locations import LOCATIONS
 from server.database import select_sightings, remove_sighting, update_likelihoods, remove_orphan_likelihoods
@@ -64,6 +65,7 @@ class Section:
 
 
 async def recalculate():
+    start = time()
     logger.debug('Starting recalculate...')
     sightings_by_world = await get_sightings()
     for world, sightings in sightings_by_world.items():
@@ -77,7 +79,8 @@ async def recalculate():
         await update_likelihoods(world, dumps(likelihoods))
     # Removing likelihoods for worlds without any sightings
     await remove_orphan_likelihoods(worlds=list(set(sightings_by_world.keys())))
-    logger.debug('Finished recalculate.')
+    end = time()
+    logger.info('Finished recalculating (took %ss)', str(round(end - start, 2)))
 
 
 async def get_sightings() -> dict[int, list[Sighting]]:
