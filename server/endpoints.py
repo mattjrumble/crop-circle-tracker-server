@@ -2,9 +2,10 @@ from datetime import datetime
 from json import loads
 from logging import getLogger
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from fastapi.routing import APIRoute
 
+from server.authentication import authentication
 from server.database import select_likelihoods, insert_sighting
 from server.validators import validate_post, ValidationError
 
@@ -39,7 +40,7 @@ class LoggingRoute(APIRoute):
 router = APIRouter(route_class=LoggingRoute)
 
 
-@router.get('/')
+@router.get('/', dependencies=[Depends(authentication)])
 async def get():
     result = {}
     for world, likelihood_json in await select_likelihoods():
@@ -47,7 +48,7 @@ async def get():
     return result
 
 
-@router.post('/')
+@router.post('/', dependencies=[Depends(authentication)])
 async def post(data: dict):
     try:
         world, location = validate_post(data)
