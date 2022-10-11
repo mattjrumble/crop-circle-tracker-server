@@ -1,11 +1,11 @@
 from collections import defaultdict
 from datetime import datetime
-from json import dumps
 from logging import getLogger
 from time import time
 
+from server import endpoints
 from server.locations import LOCATIONS
-from server.database import select_sightings, remove_sighting, update_likelihoods, remove_orphan_likelihoods
+from server.database import select_sightings, remove_sighting
 
 FIFTEEN_MINUTES = 15 * 60
 logger = getLogger('uvicorn')
@@ -68,17 +68,16 @@ async def recalculate():
     start = time()
     logger.debug('Starting recalculate...')
     sightings_by_world = await get_sightings()
+    likelihoods = {}
     for world, sightings in sightings_by_world.items():
         new_sightings, old_sightings = separate_sightings(sightings)
         if old_sightings:
             logger.debug('Removing old sightings for world %s: %s', world, old_sightings)
             for sighting in old_sightings:
                 await remove_sighting(sighting.row_id)
-        likelihoods = get_likelihoods(new_sightings)
-        logger.debug('Updating likelihoods for world %s: %s', world, likelihoods)
-        await update_likelihoods(world, dumps(likelihoods))
-    # Removing likelihoods for worlds without any sightings
-    await remove_orphan_likelihoods(worlds=list(set(sightings_by_world.keys())))
+        likelihoods[world] = get_likelihoods(new_sightings)
+    logger.debug('Updated likelihoods: %s', likelihoods)
+    endpoints.likelihoods_cache = likelihoods
     end = time()
     logger.info('Finished recalculating (took %ss)', str(round(end - start, 2)))
 
