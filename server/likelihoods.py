@@ -66,17 +66,17 @@ class Section:
 
 async def recalculate():
     start = time()
-    logger.debug('Starting recalculate...')
+    logger.info('Starting recalculate...')
     sightings_by_world = await get_sightings()
     likelihoods = {}
     for world, sightings in sightings_by_world.items():
         new_sightings, old_sightings = separate_sightings(sightings)
         if old_sightings:
-            logger.debug('Removing old sightings for world %s: %s', world, old_sightings)
+            logger.info('Removing old sightings for world %s: %s', world, old_sightings)
             for sighting in old_sightings:
                 await remove_sighting(sighting.row_id)
         likelihoods[world] = get_likelihoods(new_sightings)
-    logger.debug('Updated likelihoods: %s', likelihoods)
+    logger.info('Updated likelihoods: %s', likelihoods)
     endpoints.likelihoods_cache = likelihoods
     end = time()
     logger.info('Finished recalculating (took %ss)', str(round(end - start, 2)))
