@@ -27,3 +27,13 @@ async def remove_sighting(row_id):
     async with aiosqlite.connect(FILENAME) as db:
         await db.execute('DELETE FROM sightings WHERE row_id = ?', (row_id,))
         await db.commit()
+
+
+async def remove_old_sightings(dt):
+    """
+    Remove sightings older than the given datetime. Return the number of sightings deleted.
+    """
+    async with aiosqlite.connect(FILENAME) as db:
+        cursor = await db.execute('DELETE FROM sightings WHERE dt < ?', (dt,))
+        await db.commit()
+        return cursor.rowcount

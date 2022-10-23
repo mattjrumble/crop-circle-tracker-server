@@ -1,7 +1,7 @@
 from datetime import datetime
 from logging import getLogger
 
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, Response
 from fastapi.routing import APIRoute
 
 from server.authentication import authentication
@@ -37,16 +37,23 @@ class LoggingRoute(APIRoute):
 
 
 router = APIRouter(route_class=LoggingRoute)
-likelihoods_cache = {}
+CACHE = {
+    'likelihoods': {},
+    'in_update_period': False
+}
 
 
 @router.get('/', dependencies=[Depends(authentication)])
 async def get():
-    return likelihoods_cache
+    if CACHE['in_update_period']:
+        return Response(status_code=503)
+    return CACHE['likelihoods']
 
 
 @router.post('/', dependencies=[Depends(authentication)])
 async def post(data: dict):
+    if CACHE['in_update_period']:
+        return Response(status_code=503)
     try:
         world, location = validate_post(data)
     except ValidationError as exc:

@@ -3,7 +3,7 @@ from datetime import datetime
 from logging import getLogger
 from time import time
 
-from server import endpoints
+from server.endpoints import CACHE
 from server.locations import LOCATIONS
 from server.database import select_sightings, remove_sighting
 
@@ -66,7 +66,7 @@ class Section:
 
 async def recalculate():
     start = time()
-    logger.info('Starting recalculate...')
+    logger.info('Starting recalculating likelihoods...')
     sightings_by_world = await get_sightings()
     likelihoods = {}
     for world, sightings in sightings_by_world.items():
@@ -77,9 +77,9 @@ async def recalculate():
                 await remove_sighting(sighting.row_id)
         likelihoods[world] = get_likelihoods(new_sightings)
     logger.info('Updated likelihoods: %s', likelihoods)
-    endpoints.likelihoods_cache = likelihoods
+    CACHE['likelihoods'] = likelihoods
     end = time()
-    logger.info('Finished recalculating (took %ss)', str(round(end - start, 2)))
+    logger.info('Finished recalculating likelihoods (took %ss)', str(round(end - start, 2)))
 
 
 async def get_sightings() -> dict[int, list[Sighting]]:

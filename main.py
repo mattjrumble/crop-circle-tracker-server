@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi_utils.tasks import repeat_every
 from uvicorn import run
 
-from server import database, likelihoods
+from server import database, game_updates, likelihoods
 from server.endpoints import router
 from server.log_config import LOG_CONFIG
 
@@ -20,8 +20,10 @@ async def initialize():
 
 
 @app.on_event('startup')
-@repeat_every(seconds=10, wait_first=False, logger=logger)
-async def recalculate():
+@repeat_every(seconds=10, logger=logger)
+async def recalculate_quick():
+    game_updates.recalculate()
+    await game_updates.purge_sightings()
     await likelihoods.recalculate()
 
 
