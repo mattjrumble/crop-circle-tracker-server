@@ -20,7 +20,7 @@ class Sighting:
         self.dt = datetime.fromisoformat(dt_string)
         seconds_since_sighting = int((datetime.now() - self.dt).total_seconds())
         start_of_window = (self.location * FIFTEEN_MINUTES) + seconds_since_sighting
-        server_lag = max(seconds_since_sighting * ESTIMATED_SERVER_LAG_RATE, SERVER_LAG_LIMIT)
+        server_lag = min(seconds_since_sighting * ESTIMATED_SERVER_LAG_RATE, SERVER_LAG_LIMIT)
         self.window = RotationWindow(start_of_window, start_of_window + FIFTEEN_MINUTES + server_lag)
 
     def __repr__(self):
