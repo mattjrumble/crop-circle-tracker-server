@@ -5,8 +5,8 @@ from fastapi_utils.tasks import repeat_every
 from uvicorn import run
 
 from server import database, game_updates, likelihoods
+from server.constants import LOG_CONFIG
 from server.endpoints import router
-from server.log_config import LOG_CONFIG
 
 
 app = FastAPI(openapi_url=None)

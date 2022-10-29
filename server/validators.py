@@ -1,4 +1,4 @@
-from server.locations import LOCATIONS
+from server.constants import LOCATIONS
 
 
 class ValidationError(Exception):

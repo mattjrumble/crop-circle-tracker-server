@@ -3,13 +3,10 @@ from datetime import datetime
 from logging import getLogger
 from time import time
 
+from server.constants import LOCATIONS, TIMEZONE, FIFTEEN_MINUTES, ESTIMATED_SERVER_LAG_RATE, SERVER_LAG_LIMIT
 from server.endpoints import CACHE
-from server.locations import LOCATIONS
 from server.database import select_sightings, remove_sighting
 
-FIFTEEN_MINUTES = 15 * 60
-ESTIMATED_SERVER_LAG_RATE = 5 / FIFTEEN_MINUTES  # i.e. assume up to 5 seconds of server lag every 15 minutes
-SERVER_LAG_LIMIT = FIFTEEN_MINUTES
 logger = getLogger('uvicorn')
 
 
@@ -18,7 +15,7 @@ class Sighting:
         self.row_id = row_id
         self.location = location
         self.dt = datetime.fromisoformat(dt_string)
-        seconds_since_sighting = int((datetime.now() - self.dt).total_seconds())
+        seconds_since_sighting = int((datetime.now(tz=TIMEZONE) - self.dt).total_seconds())
         start_of_window = (self.location * FIFTEEN_MINUTES) + seconds_since_sighting
         server_lag = min(seconds_since_sighting * ESTIMATED_SERVER_LAG_RATE, SERVER_LAG_LIMIT)
         self.window = RotationWindow(start_of_window, start_of_window + FIFTEEN_MINUTES + server_lag)
@@ -40,17 +37,17 @@ class RotationWindow:
     Assume the length of any rotation window is < LENGTH / 2 (i.e. we don't have to worry about sections overlapping
     in two different places).
     """
-    CIRCUMFERENCE = len(LOCATIONS) * FIFTEEN_MINUTES
+    circumference = len(LOCATIONS) * FIFTEEN_MINUTES
 
     def __init__(self, start, end):
-        self.start = int(start % self.CIRCUMFERENCE)
-        self.end = int(end % self.CIRCUMFERENCE)
+        self.start = int(start % self.circumference)
+        self.end = int(end % self.circumference)
 
     def __len__(self):
         if self.end > self.start:
             return self.end - self.start
         else:
-            return (self.CIRCUMFERENCE - self.end) + self.start
+            return (self.circumference - self.end) + self.start
 
     def get_likelihoods(self) -> dict[int: float]:
         """
@@ -82,11 +79,11 @@ class RotationWindow:
         WindowsDoNotOverlap error if the two window don't overlap.
         """
         # Offset both windows so that this windows's start is at 0. This simplifies the logic.
-        offset = self.CIRCUMFERENCE - self.start
+        offset = self.circumference - self.start
         start = 0
-        end = (self.end + offset) % self.CIRCUMFERENCE
-        other_start = (other_window.start + offset) % self.CIRCUMFERENCE
-        other_end = (other_window.end + offset) % self.CIRCUMFERENCE
+        end = (self.end + offset) % self.circumference
+        other_start = (other_window.start + offset) % self.circumference
+        other_end = (other_window.end + offset) % self.circumference
 
         if other_start < end:
             start = other_start

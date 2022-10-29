@@ -1,7 +1,7 @@
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 
-API_KEY = 'gnomechild123'
+from server.constants import API_KEY
 
 
 def authentication(api_key: str = Depends(OAuth2PasswordBearer(tokenUrl='token'))):

@@ -5,6 +5,7 @@ from fastapi import APIRouter, HTTPException, Depends, Response
 from fastapi.routing import APIRoute
 
 from server.authentication import authentication
+from server.constants import TIMEZONE
 from server.database import insert_sighting
 from server.validators import validate_post, ValidationError
 
@@ -58,4 +59,4 @@ async def post(data: dict):
         world, location = validate_post(data)
     except ValidationError as exc:
         raise HTTPException(status_code=400, detail=str(exc))
-    await insert_sighting(world=world, location=location, dt=datetime.now())
+    await insert_sighting(world=world, location=location, dt=datetime.now(tz=TIMEZONE))
