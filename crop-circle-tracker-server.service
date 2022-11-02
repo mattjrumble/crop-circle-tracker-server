@@ -1,0 +1,13 @@
+[Unit]
+Description=Crop Circle Tracker Server
+After=network.target
+
+[Service]
+Type=simple
+Restart=always
+User=root
+ExecStart=/opt/crop-circle-tracker-server/venv/bin/python /opt/crop-circle-tracker-server/main.py
+WorkingDirectory=/opt/crop-circle-tracker-server/
+
+[Install]
+WantedBy=multi-user.target
