@@ -9,4 +9,4 @@ A FastAPI/Uvicorn webserver with two endpoints, `POST /` and `GET /`.
   are likelihoods.
 * Both endpoints use simple bearer token authentication.
 * Sightings are reset every Wednesday 11:30AM UK time to match the weekly game update. The server will return a 503 for all requests made within 30 minutes of this time.
-* Server lag is included in calculations, with an estimate rate of 5 seconds of lag every 15 minutes.
+* Server lag is included in calculations, with an estimated rate of 5 seconds of lag every 15 minutes.
