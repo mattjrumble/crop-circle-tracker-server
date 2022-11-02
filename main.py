@@ -28,4 +28,4 @@ async def recalculate_quick():
 
 
 if __name__ == '__main__':
-    run(app, host='0.0.0.0', port=8000, log_config=LOG_CONFIG)
+    run(app, host='0.0.0.0', port=80, log_config=LOG_CONFIG)
