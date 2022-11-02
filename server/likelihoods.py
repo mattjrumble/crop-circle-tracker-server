@@ -47,7 +47,7 @@ class RotationWindow:
         if self.end > self.start:
             return self.end - self.start
         else:
-            return (self.circumference - self.end) + self.start
+            return (self.circumference - self.start) + self.end
 
     def get_likelihoods(self) -> dict[int: float]:
         """
