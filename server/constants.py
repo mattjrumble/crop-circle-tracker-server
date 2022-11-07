@@ -34,7 +34,7 @@ GAME_UPDATE_TIME = time(hour=11, minute=30)
 GAME_UPDATE_GRACE_PERIOD_SECONDS = 30 * 60
 
 ESTIMATED_SERVER_LAG_RATE = (10 * 60) / (24 * 60 * 60)  # Assume up to 10 minutes of server lag every day
-SERVER_LAG_LIMIT = FIFTEEN_MINUTES
+SERVER_LAG_LIMIT = 60 * 60
 
 API_KEY = 'gnomechild123'
 
