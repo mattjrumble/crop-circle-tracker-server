@@ -44,14 +44,19 @@ CACHE = {
 }
 
 
-@router.get('/', dependencies=[Depends(authentication)])
+@router.get('/')
+def root():
+    return {'health': 'ok'}
+
+
+@router.get('/get/', dependencies=[Depends(authentication)])
 async def get():
     if CACHE['in_update_period']:
         return Response(status_code=503)
     return CACHE['likelihoods']
 
 
-@router.post('/', dependencies=[Depends(authentication)])
+@router.post('/post/', dependencies=[Depends(authentication)])
 async def post(data: dict):
     if CACHE['in_update_period']:
         return Response(status_code=503)
