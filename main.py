@@ -28,4 +28,12 @@ async def recalculate_quick():
 
 
 if __name__ == '__main__':
-    run(app, host='0.0.0.0', port=80, log_config=LOG_CONFIG)
+    run(
+        app,
+        host='0.0.0.0',
+        port=443,
+        log_config=LOG_CONFIG,
+        ssl_keyfile='./certs/keyfile.txt',
+        ssl_certfile='./certs/certfile.txt',
+        ssl_ca_certs='./certs/ca-certs.txt'
+    )

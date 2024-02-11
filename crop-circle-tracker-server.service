@@ -6,8 +6,8 @@ After=network.target
 Type=simple
 Restart=always
 User=root
-ExecStart=/opt/crop-circle-tracker-server/venv/bin/python /opt/crop-circle-tracker-server/main.py
-WorkingDirectory=/opt/crop-circle-tracker-server/
+ExecStart=/home/ec2-user/crop-circle-tracker-server/venv/bin/python /home/ec2-user/crop-circle-tracker-server/main.py
+WorkingDirectory=/home/ec2-user/crop-circle-tracker-server/
 
 [Install]
 WantedBy=multi-user.target

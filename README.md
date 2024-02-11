@@ -14,8 +14,12 @@ A FastAPI/Uvicorn webserver with two endpoints, `POST /post/` and `GET /get/`.
 ### Setup
 
 ```
+sudo yum install git
+git clone ...
 python3.9 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
-python main.py
+sudo cp crop-circle-tracker-server.service /etc/systemd/system/
+# Place private key (key.txt), certificate (crt.txt) and CA bundle (ca-certs.txt) in /home/ec2-user/crop-circle-tracker-server/certs/
+sudo systemctl start crop-circle-tracker-server
 ```
