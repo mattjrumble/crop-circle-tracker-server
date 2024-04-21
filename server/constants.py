@@ -18,10 +18,12 @@ LOCATIONS = {
     11: "Brimhaven",
     12: "Mos Le'Harmless",
     13: "Taverley",
-    14: "Lumbridge Mill",
-    15: "East Ardougne",
-    16: "South of Varrock",
-    17: "Miscellania",
+    14: "Kourend Castle",
+    15: "Civitas illa Fortis",
+    16: "Lumbridge Mill",
+    17: "East Ardougne",
+    18: "South of Varrock",
+    19: "Miscellania",
 }
 
 TIMEZONE = timezone('Europe/London')  # Use UK timezone to align with the weekly game update times
