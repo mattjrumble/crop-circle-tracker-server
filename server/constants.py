@@ -26,6 +26,7 @@ LOCATIONS = {
     19: "South of Varrock",
     20: "Miscellania",
 }
+LOCATIONS_REVERSE_MAPPING = {v: k for k, v in LOCATIONS.items()}
 
 TIMEZONE = timezone('Europe/London')  # Use UK timezone to align with the weekly game update times
 FIFTEEN_MINUTES = 15 * 60
