@@ -49,10 +49,10 @@ class RotationWindow:
         else:
             return (self.circumference - self.start) + self.end
 
-    def get_likelihoods(self) -> dict[int: float]:
+    def get_likelihoods(self) -> dict[str: float]:
         """
-        Return a dictionary of locations to likelihoods that the crop circle is in that particular location, based
-        on this window.
+        Return a dictionary of (string) locations to likelihoods that the crop circle is in that particular location,
+        based on this window.
         """
         start_location, start_offset = divmod(self.start, FIFTEEN_MINUTES)
         end_location, end_offset = divmod(self.end, FIFTEEN_MINUTES)
@@ -71,6 +71,9 @@ class RotationWindow:
                 location = (location + 1) % len(LOCATIONS)
                 likelihoods[location] = FIFTEEN_MINUTES / len(self)
             likelihoods[end_location] = end_offset / len(self)
+
+        # Convert locations from integers to strings before returning.
+        likelihoods = {LOCATIONS[k]: v for k, v in likelihoods.items()}
         return dict(sorted(likelihoods.items()))
 
     def combine(self, other_window):
